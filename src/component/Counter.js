@@ -1,41 +1,30 @@
-import {createStore} from '../redux';
 import React from 'react';
-const INCREASE = "increase";
-const DECREASE = "decrease";
-
-let reducer = (state = { number: 0 }, action) => {
-    if (action === undefined) {
-        return state;
-    }
-    switch (action.type) {
-        case INCREASE: return { number: state.number + action.amount };
-        case DECREASE: return { number: state.number - action.amount };
-        default: return state;
-    }
-}
-
-let store = createStore(reducer);
+import store from './Store';
+import { INCREASE, DECREASE } from './ActionTypes';
 
 export default class Counter extends React.Component {
-    constructor(){
+    constructor() {
         super();
         this.state = {
-            number:store.getState().number
+            number: store.getState().Counter.number
         }
     }
-    componentWillMount(){
-        this.unsubscribe = store.subscribe(()=>{this.setState({number:store.getState().number})});
+
+    componentWillMount() {
+        this.unsub = store.subscribe(() => {
+            this.setState({ number: store.getState().Counter.number })
+        })
     }
 
-    componentWillUnmount(){
-        this.unsubscribe();
+    componentWillUnmount() {
+        this.unsub();
     }
 
     render() {
         return <div className="container">
-            <p>{this.state.number}</p>
-            <button onClick={()=>{store.dispatch({type:INCREASE,amount:2})}} className="btn btn-primary">+</button>
-            <button onClick={()=>{store.dispatch({type:DECREASE,amount:2})}} className="btn btn-primary">-</button>
+            <button style={{marginRight:"5px"}} className="btn btn-primary btn-xs" onClick={()=>{store.dispatch({type:INCREASE,amount:2})}}>+</button>
+            {this.state.number}
+            <button style={{marginLeft:"5px"}} className="btn btn-primary btn-xs" onClick={()=>{store.dispatch({type:DECREASE,amount:2})}}>-</button>
         </div>
     }
 }

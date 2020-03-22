@@ -14,7 +14,9 @@ export const createStore=(reducer)=>{
     let getState = ()=>{
         return state;
     }
+
     dispatch();
+
     return {
         getState,
         subscribe,
